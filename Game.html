@@ -1,0 +1,2138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Hub & Applications</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* iOS Premium Blend with Liquid Animation */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(-45deg, #e0e7ff, #f3e8ff, #e0f2fe, #f1f5f9);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            color: #1e293b;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* iOS Glassmorphism Card Container */
+        .form-container {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            padding: 35px 30px;
+            max-width: 460px;
+            width: 100%;
+            box-shadow: 0 10px 32px rgba(31, 38, 135, 0.05);
+            box-sizing: border-box;
+        }
+
+        /* iOS Progress Bar */
+        .progress-container {
+            margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            padding: 3px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #007af5; 
+            border-radius: 10px;
+            width: 25%; 
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0f172a;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-step, .sub-form {
+            display: none; 
+        }
+
+        .form-step.active, .sub-form.active {
+            display: block; 
+        }
+
+        .input-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+            padding-left: 2px;
+        }
+
+        /* iOS Inputs */
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            color: #1e293b;
+            font-family: inherit;
+            box-sizing: border-box;
+            font-size: 15px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+            outline: none;
+            border-color: #007af5;
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 0 3px rgba(0, 122, 245, 0.15);
+        }
+
+        /* iOS Grid / Menu Buttons */
+        .interactive-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .menu-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .select-btn, .menu-btn {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            color: #1e293b;
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 14px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .select-btn.selected {
+            background: #007af5; 
+            border-color: #007af5;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 122, 245, 0.25);
+        }
+
+        /* Days Grid */
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .day-checkbox {
+            display: none;
+        }
+
+        .day-label {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            padding: 10px 5px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .day-checkbox:checked + .day-label {
+            background: #007af5;
+            border-color: #007af5;
+            color: #fff;
+        }
+
+        .error-msg {
+            color: #df2c2c;
+            font-size: 12px;
+            margin-top: 6px;
+            font-weight: 500;
+            display: block;
+            min-height: 15px;
+        }
+
+        .discord-box {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            padding: 14px;
+            margin-bottom: 25px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: #007af5;
+            border: none;
+            color: #fff;
+            padding: 8px 14px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        /* Navigation Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #007af5;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 122, 245, 0.2);
+            border-radius: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn.next-btn {
+            background: #007af5;
+            border: none;
+            color: #fff;
+        }
+
+        /* Result Image Previews */
+        .result-preview-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        .result-item {
+            margin-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 6px;
+            font-size: 14px;
+        }
+        .result-item strong { color: #475569; display: block; font-size: 11px; text-transform: uppercase; }
+        .result-item span { color: #0f172a; font-weight: 600; }
+        
+        .image-bucket img {
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border: 2px solid #007af5;
+            margin-bottom: 20px;
+        }
+        .success-panel { text-align: center; }
+
+        /* Coin Pill */
+        .coin-pill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #fde68a, #f59e0b);
+            color: #7c2d12;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 0 auto 22px auto;
+            width: fit-content;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Shop Category Tabs */
+        .shop-tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            margin-bottom: 18px;
+        }
+        .shop-tab {
+            flex: none;
+            padding: 9px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(15,23,42,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .shop-tab.active {
+            background: #007af5;
+            border-color: #007af5;
+            color: #fff;
+        }
+
+        /* Shop Item List */
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 340px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 2px;
+        }
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.55);
+            border: 1px solid rgba(15,23,42,0.08);
+            border-radius: 14px;
+            padding: 12px 14px;
+        }
+        .shop-item-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .shop-item-price {
+            font-size: 12px;
+            color: #b45309;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+        .buy-btn {
+            background: #007af5;
+            border: none;
+            color: #fff;
+            padding: 9px 16px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .buy-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        /* Mini Game Screens */
+        .game-stage {
+            background: rgba(255,255,255,0.4);
+            border: 1px solid rgba(15,23,42,0.08);
+            border-radius: 18px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .big-tap-btn {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #007af5;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            margin: 10px auto;
+            display: block;
+            box-shadow: 0 10px 24px rgba(0,122,245,0.35);
+            user-select: none;
+            transition: transform 0.08s ease;
+        }
+        .big-tap-btn:active { transform: scale(0.94); }
+        .reaction-box {
+            width: 100%;
+            height: 160px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s ease;
+        }
+        .game-stat { font-size: 13px; color: #475569; font-weight: 600; margin: 4px 0; }
+        .cooldown-note {
+            text-align: center;
+            font-size: 13px;
+            color: #b45309;
+            font-weight: 600;
+            background: rgba(245, 158, 11, 0.12);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        /* Home Screen (App Icon Grid) */
+        .home-header { text-align: center; margin-bottom: 18px; }
+        .home-eyebrow {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #007af5;
+            margin-bottom: 6px;
+        }
+        .home-greeting {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        .home-sub {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px 10px;
+            margin-top: 6px;
+        }
+        .app-tile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 9px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .app-icon {
+            width: 62px;
+            height: 62px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 8px 16px rgba(15,23,42,0.15), inset 0 1px 0 rgba(255,255,255,0.35);
+            transition: transform 0.12s ease;
+        }
+        .app-tile:active .app-icon { transform: scale(0.9); }
+        .app-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #334155;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .grad-blue { background: linear-gradient(135deg, #60a5fa, #1d4ed8); }
+        .grad-emerald { background: linear-gradient(135deg, #34d399, #059669); }
+        .grad-red { background: linear-gradient(135deg, #f87171, #dc2626); }
+        .grad-purple { background: linear-gradient(135deg, #c084fc, #9333ea); }
+        .grad-amber { background: linear-gradient(135deg, #fbbf24, #d97706); }
+        .grad-indigo { background: linear-gradient(135deg, #818cf8, #4f46e5); }
+        .grad-gold { background: linear-gradient(135deg, #fde047, #ca8a04); }
+
+        /* Spin Wheel */
+        .wheel-wrap { position: relative; width: 230px; height: 230px; margin: 6px auto 16px auto; }
+        .wheel-pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 13px solid transparent;
+            border-right: 13px solid transparent;
+            border-top: 22px solid #0f172a;
+            z-index: 5;
+        }
+        .wheel-el {
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
+            border: 6px solid #fff;
+            box-shadow: 0 10px 28px rgba(15,23,42,0.25);
+            transition: transform 4s cubic-bezier(0.15, 0.65, 0.1, 1);
+        }
+        .wheel-labels {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+        .wheel-label {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 30px; height: 30px;
+            margin-left: -15px; margin-top: -15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .wheel-hub {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 40px; height: 40px;
+            margin-left: -20px; margin-top: -20px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+
+        /* Emoji Slot Machine */
+        .slot-machine {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 22px 14px;
+            margin-bottom: 10px;
+        }
+        .slot-reel {
+            width: 72px;
+            height: 72px;
+            background: #fff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 800;
+            color: #1e293b;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        /* Account / Profile */
+        .readonly-field {
+            padding: 12px 14px;
+            background: rgba(15,23,42,0.04);
+            border: 1px solid rgba(15,23,42,0.08);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+        .wealth-badge {
+            display: block;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #7c2d12;
+            background: linear-gradient(135deg, #fed7aa, #fdba74);
+            border-radius: 12px;
+            padding: 9px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container" id="authBox">
+        <div class="home-header">
+            <div class="home-eyebrow">Server Portal</div>
+            <h2 class="home-greeting">🔐 Account</h2>
+            <p class="home-sub">Coin တွေ ဖုန်းတိုင်းကနေ ပြန်ရအောင် Account ဖွင့်ပါ</p>
+        </div>
+
+        <div class="shop-tabs" style="justify-content:center;">
+            <div class="shop-tab active" id="authTabLogin" onclick="switchAuthTab('login')">Login</div>
+            <div class="shop-tab" id="authTabRegister" onclick="switchAuthTab('register')">Register</div>
+        </div>
+
+        <div id="loginPane">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="loginUsername" placeholder="@Example">
+            </div>
+            <div class="input-group">
+                <label>PIN</label>
+                <input type="password" id="loginPin" placeholder="4-6 လုံး PIN" inputmode="numeric">
+            </div>
+            <button class="nav-btn next-btn" style="width:100%;" onclick="loginAccount()">LOGIN</button>
+        </div>
+
+        <div id="registerPane" style="display:none;">
+            <div class="input-group">
+                <label>Name</label>
+                <input type="text" id="regName" placeholder="Example">
+            </div>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="regUsername" placeholder="@Example">
+            </div>
+            <div class="input-group">
+                <label>Phone Number</label>
+                <input type="text" id="regPhone" placeholder="09 123456789">
+            </div>
+            <div class="input-group">
+                <label>Age</label>
+                <input type="number" id="regAge" placeholder="23">
+            </div>
+            <div class="input-group">
+                <label>PIN (ဂဏန်း 4-6 လုံး)</label>
+                <input type="password" id="regPin" placeholder="****" inputmode="numeric">
+            </div>
+            <div class="input-group">
+                <label>Confirm PIN</label>
+                <input type="password" id="regPin2" placeholder="****" inputmode="numeric">
+            </div>
+            <button class="nav-btn next-btn" style="width:100%;" onclick="registerAccount()">CREATE ACCOUNT</button>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="hubMenuBox" style="display: none;">
+        <div class="home-header">
+            <div class="home-eyebrow">Server Portal</div>
+            <h2 class="home-greeting">👋 မင်္ဂလာပါ!</h2>
+            <p class="home-sub">လုပ်ဆောင်ချင်တာကို ရွေးလိုက်ပါ</p>
+        </div>
+        <div class="coin-pill">🪙 <span class="coin-balance">0</span> Coins</div>
+
+        <div class="app-grid">
+            <div class="app-tile" onclick="openForm('application')">
+                <div class="app-icon grad-blue">📝</div>
+                <div class="app-label">Server Form</div>
+            </div>
+            <div class="app-tile" onclick="openForm('report')">
+                <div class="app-icon grad-emerald">✨</div>
+                <div class="app-label">Report</div>
+            </div>
+            <div class="app-tile" onclick="openForm('complaint')">
+                <div class="app-icon grad-red">⚠️</div>
+                <div class="app-label">တိုင်ကြားရန်</div>
+            </div>
+            <div class="app-tile" onclick="openMiniGameHub()">
+                <div class="app-icon grad-purple">🎮</div>
+                <div class="app-label">Mini Game</div>
+            </div>
+            <div class="app-tile" onclick="openShop()">
+                <div class="app-icon grad-amber">🛒</div>
+                <div class="app-label">Shop</div>
+            </div>
+            <div class="app-tile" onclick="openProfile()">
+                <div class="app-icon grad-indigo">👤</div>
+                <div class="app-label">Profile</div>
+            </div>
+            <div class="app-tile" onclick="openLeaderboard()">
+                <div class="app-icon grad-gold">👑</div>
+                <div class="app-label">Top 10</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="leaderboardBox" style="display: none;">
+        <h2>👑 Top 10 ချမ်းသာသူများ</h2>
+        <div class="item-list" id="leaderboardList" style="max-height: 420px;"></div>
+        <div class="btn-group">
+            <button class="nav-btn next-btn" style="width:100%;" onclick="backToHub()">Home</button>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="appFormBox" style="display: none;">
+        <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+        <div class="form-step active" id="step1">
+            <h2>Contact Info</h2>
+            <div class="input-group">
+                <label>Telegram Username</label>
+                <input type="text" id="tgUser" placeholder="@username" oninput="validateStep1()">
+                <span class="error-msg" id="errTg"></span>
+            </div>
+            <div class="input-group">
+                <label>Age</label>
+                <input type="number" id="userAge" placeholder="သင်၏ အသက်" oninput="validateStep1()">
+                <span class="error-msg" id="errAge"></span>
+            </div>
+            <div class="input-group">
+                <label>Gender</label>
+                <div class="interactive-options">
+                    <div class="select-btn" id="genderM" onclick="setGender('Male')">Male</div>
+                    <div class="select-btn" id="genderF" onclick="setGender('Female')">Female</div>
+                </div>
+                <input type="hidden" id="selectedGender">
+                <span class="error-msg" id="errGender"></span>
+            </div>
+            <div class="btn-group">
+                <button class="nav-btn" onclick="backToHub()">Home</button>
+                <button class="nav-btn next-btn" onclick="goNext(1)">Next</button>
+            </div>
+        </div>
+
+        <div class="form-step" id="step2">
+            <h2>In-Game Info</h2>
+            <div class="input-group">
+                <label>In-Game Name (IGN)</label>
+                <input type="text" id="ignName" placeholder="ဂိမ်းထဲက နာမည်အမှန်" oninput="validateStep2()">
+                <span class="error-msg" id="errIgn"></span>
+            </div>
+            <div class="input-group">
+                <label>Player Type</label>
+                <div class="interactive-options">
+                    <div class="select-btn" id="typeP1" onclick="togglePlayerType('Builder')">Builder</div>
+                    <div class="select-btn" id="typeP2" onclick="togglePlayerType('Redstone')">Redstone</div>
+                    <div class="select-btn" id="typeP3" onclick="togglePlayerType('Survival')">Survival</div>
+                    <div class="select-btn" id="typeP4" onclick="togglePlayerType('PvP')">PvP</div>
+                </div>
+                <span class="error-msg" id="errPType"></span>
+            </div>
+            <div class="input-group">
+                <label>Minecraft Experience</label>
+                <input type="text" id="mcExp" placeholder="ဥပမာ - ၂ နှစ်လောက်ဆော့ဖူးပါတယ်" oninput="validateStep2()">
+                <span class="error-msg" id="errExp"></span>
+            </div>
+            <div class="btn-group">
+                <button class="nav-btn" onclick="goBack(2)">Back</button>
+                <button class="nav-btn next-btn" onclick="goNext(2)">Next</button>
+            </div>
+        </div>
+
+        <div class="form-step" id="step3">
+            <h2>Active Time</h2>
+            <div class="input-group">
+                <label>Activity (ဘယ်နှစ်နာရီဆော့နိုင်လဲ)</label>
+                <input type="text" id="playHours" placeholder="ဥပမာ - တစ်နေ့ ၃ နာရီခန့်" oninput="validateStep3()">
+                <span class="error-msg" id="errHours"></span>
+            </div>
+            <div class="input-group">
+                <label>Server ဆော့ချိန်</label>
+                <div class="interactive-options">
+                    <div class="select-btn" id="time🌅" onclick="togglePlayTime('Morning')">🌅 Morning</div>
+                    <div class="select-btn" id="time⛅" onclick="togglePlayTime('Afternoon')">⛅ Afternoon</div>
+                    <div class="select-btn" id="time🌆" onclick="togglePlayTime('Evening')">🌆 Evening</div>
+                    <div class="select-btn" id="time🌙" onclick="togglePlayTime('Night')">🌙 Night</div>
+                    <div class="select-btn" id="time" style="grid-column: span 2;" onclick="togglePlayTime('Midnight')">Midnight</div>
+                </div>
+                <span class="error-msg" id="errTime"></span>
+            </div>
+            <div class="input-group">
+                <label>ဘယ်နေ့ရက်တွေမှာ ဆော့တတ်လဲ</label>
+                <div class="days-grid">
+                    <input type="checkbox" id="dMon" class="day-checkbox" onchange="validateStep3()"><label for="dMon" class="day-label">Mon</label>
+                    <input type="checkbox" id="dTue" class="day-checkbox" onchange="validateStep3()"><label for="dTue" class="day-label">Tue</label>
+                    <input type="checkbox" id="dWed" class="day-checkbox" onchange="validateStep3()"><label for="dWed" class="day-label">Wed</label>
+                    <input type="checkbox" id="dThu" class="day-checkbox" onchange="validateStep3()"><label for="dThu" class="day-label">Thu</label>
+                    <input type="checkbox" id="dFri" class="day-checkbox" onchange="validateStep3()"><label for="dFri" class="day-label">Fri</label>
+                    <input type="checkbox" id="dSat" class="day-checkbox" onchange="validateStep3()"><label for="dSat" class="day-label">Sat</label>
+                    <input type="checkbox" id="dSun" class="day-checkbox" onchange="validateStep3()"><label for="dSun" class="day-label">Sun</label>
+                </div>
+                <span class="error-msg" id="errDays"></span>
+            </div>
+            <div class="btn-group">
+                <button class="nav-btn" onclick="goBack(3)">Back</button>
+                <button class="nav-btn next-btn" onclick="goNext(3)">Next</button>
+            </div>
+        </div>
+
+        <div class="form-step" id="step4">
+            <h2>Verification</h2>
+            <div class="input-group">
+                <label>Why do you want to join?</label>
+                <textarea id="whyJoin" rows="3" placeholder="Server ဆော့ခြင်ရတဲ့ အကြောင်းပြချက်" oninput="validateStep4()"></textarea>
+                <span class="error-msg" id="errWhy"></span>
+            </div>
+            
+            <div class="input-group">
+                <label>Server Rules</label>
+                <div style="background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(0,0,0,0.08); padding: 12px; font-size: 13px; max-height: 90px; overflow-y: auto; color: #334155; border-radius: 10px; line-height: 1.5;">
+                    ၁။ သူတစ်ပါးပစ္စည်းများ ခိုးယူဖျက်ဆီးခြင်း လုံးဝမပြုလုပ်ရ။<br>
+                    ၂။ အချင်းချင်း ရိုင်းစိုင်းစွာ ဆဲဆိုခြင်း မပြုလုပ်ရ။<br>
+                    ၃။ Cheat / Hack သုံးစွဲခြင်း လုံးဝမပြုလုပ်ရ။
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="ruleAgree" style="transform: scale(1.2);" onchange="validateStep4()">
+                    <label for="ruleAgree" style="margin-bottom: 0;">Do you agree with rules?</label>
+                </div>
+                <span class="error-msg" id="errAgree"></span>
+            </div>
+
+            <label>Server Gp Link</label>
+            <div class="Tg-box">
+                <span class="Tg-text" id="TgLinkText" style="font-size: 13px; color: #1e293b; font-weight: 500;">https://t.me/+lxGviQ2wUws1Nzc1</span>
+                <button class="copy-btn" onclick="copyTgLink()">COPY LINK</button>
+            </div>
+
+            <div class="btn-group">
+                <button class="nav-btn" onclick="goBack(4)">Back</button>
+                <button class="nav-btn next-btn" onclick="submitAppForm()">SUBMIT</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="reportFormBox" style="display: none;">
+        <h2>Report / Feedback</h2>
+        <div class="input-group">
+            <label>In-Game Name (Your IGN)</label>
+            <input type="text" id="repIgn" placeholder="သင့်ဂိမ်းနာမည်">
+        </div>
+        <div class="input-group">
+            <label>Feedback / Bug Report Topic</label>
+            <input type="text" id="repTopic" placeholder="အကြောင်းအရာ ခေါင်းစဉ်">
+        </div>
+        <div class="input-group">
+            <label>Details Description</label>
+            <textarea id="repDetails" rows="4" placeholder="အသေးစိတ် ရေးသားပေးပါ..."></textarea>
+        </div>
+        <div class="btn-group">
+            <button class="nav-btn" onclick="backToHub()">Cancel</button>
+            <button class="nav-btn next-btn" onclick="submitReportForm()">SUBMIT REPORT</button>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="complaintFormBox" style="display: none;">
+        <h2>တိုင်ကြားစာ ပေးပို့ရန်</h2>
+        <div class="input-group">
+            <label>တိုင်ကြားသူ၏ IGN</label>
+            <input type="text" id="comPlayer" placeholder="သင့်ဂိမ်းနာမည်">
+        </div>
+        <div class="input-group">
+            <label>ပြစ်မှုကျူးလွန်သူ၏ IGN (သိလျှင်ထည့်ပါ)</label>
+            <input type="text" id="comTarget" placeholder="ပြစ်မှုကျူးလွန်သူ နာမည်">
+        </div>
+        <div class="input-group">
+            <label>တိုင်ကြားလိုသည့် အကြောင်းအရင်း</label>
+            <textarea id="comDetails" rows="4" placeholder="ဖြစ်ပွားခဲ့သည့် အကြောင်းအရာကို သေသေချာချာ ရေးပေးပါ..."></textarea>
+        </div>
+        <div class="btn-group">
+            <button class="nav-btn" onclick="backToHub()">Cancel</button>
+            <button class="nav-btn next-btn" onclick="submitComplaintForm()">SUBMIT COMPLAINT</button>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="profileBox" style="display: none;">
+        <h2>👤 Profile</h2>
+        <div class="coin-pill">🪙 <span class="coin-balance">0</span> Coins</div>
+        <div class="wealth-badge" id="wealthBadge">🥉 သာမန်ကစားသမား</div>
+
+        <div class="input-group">
+            <label>Username</label>
+            <div class="readonly-field" id="profUsernameDisplay">-</div>
+        </div>
+        <div class="input-group">
+            <label>Name</label>
+            <div class="readonly-field" id="profNameDisplay">-</div>
+        </div>
+        <div class="input-group">
+            <label>Phone Number</label>
+            <div class="readonly-field" id="profPhoneDisplay">-</div>
+        </div>
+        <div class="input-group">
+            <label>Age</label>
+            <div class="readonly-field" id="profAgeDisplay">-</div>
+        </div>
+
+        <div class="input-group">
+            <label>Minecraft IGN</label>
+            <input type="text" id="profIgn" placeholder="ဂိမ်းထဲက နာမည်">
+        </div>
+
+        <div class="input-group">
+            <div class="game-stat">🎮 ကစားပြီးသောပွဲ - <span id="profGamesPlayed">0</span></div>
+            <div class="game-stat">🛒 ဝယ်ယူပြီးသော item - <span id="profPurchases">0</span></div>
+        </div>
+        <div class="btn-group">
+            <button class="nav-btn" onclick="backToHub()">Home</button>
+            <button class="nav-btn next-btn" onclick="saveProfile()">SAVE IGN</button>
+        </div>
+        <button class="nav-btn" style="width:100%; margin-top:10px; color:#dc2626; border-color:rgba(220,38,38,0.25);" onclick="logoutAccount()">🚪 Logout</button>
+        <div style="text-align:center; margin-top:16px;">
+            <span style="font-size:11px; color:#94a3b8; cursor:pointer;" onclick="openOwnerGate()">🔑 Owner Panel</span>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="ownerBox" style="display: none;">
+        <h2>🔑 Owner Dashboard</h2>
+        <div class="shop-tabs" id="ownerTabs">
+            <div class="shop-tab active" onclick="switchOwnerTab('revenue')">Revenue</div>
+            <div class="shop-tab" onclick="switchOwnerTab('users')">Users</div>
+            <div class="shop-tab" onclick="switchOwnerTab('shopPrices')">Shop ဈေး</div>
+            <div class="shop-tab" onclick="switchOwnerTab('gamePrices')">Game ဈေး</div>
+        </div>
+
+        <div id="ownerPanelRevenue">
+            <p style="text-align:center; font-size:12px; color:#64748b; margin-top:0; margin-bottom:16px;">User အားလုံးရဲ့ coin သုံးစွဲမှု စုစုပေါင်း (in-game coin tally ဖြစ်ပါတယ်၊ ငွေရင်းမဟုတ်ပါ)</p>
+            <div class="result-preview-card">
+                <div class="result-item"><strong>Total Coin Revenue</strong><span id="ownerRevenue">0</span></div>
+                <div class="result-item"><strong>Shop Purchases</strong><span id="ownerPurchases">0</span></div>
+                <div class="result-item"><strong>Mini Game Plays</strong><span id="ownerGames">0</span></div>
+            </div>
+        </div>
+
+        <div id="ownerPanelUsers" style="display:none;">
+            <div class="input-group">
+                <label>Username ရှာရန်</label>
+                <input type="text" id="ownerSearchUsername" placeholder="@Example">
+                <button class="nav-btn next-btn" style="width:100%; margin-top:8px;" onclick="ownerSearchUser()">SEARCH</button>
+            </div>
+            <div id="ownerUserResult" style="display:none;">
+                <div class="result-preview-card" id="ownerUserCard" style="padding:16px;"></div>
+                <div class="input-group">
+                    <label>Coin ထည့်ပေးမည် (Input Coin)</label>
+                    <input type="number" id="ownerGrantCoin" placeholder="100">
+                    <button class="nav-btn next-btn" style="width:100%; margin-top:8px;" onclick="ownerGrantCoin()">ထည့်ပေးမည်</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="ownerPanelShopPrices" style="display:none;">
+            <div id="ownerShopPriceList"></div>
+            <button class="nav-btn next-btn" style="width:100%; margin-top:10px;" onclick="saveShopPrices()">SAVE SHOP PRICES</button>
+        </div>
+
+        <div id="ownerPanelGamePrices" style="display:none;">
+            <div id="ownerGamePriceList"></div>
+            <button class="nav-btn next-btn" style="width:100%; margin-top:10px;" onclick="saveGamePrices()">SAVE GAME PRICES</button>
+        </div>
+
+        <div class="btn-group">
+            <button class="nav-btn next-btn" style="width:100%;" onclick="backToHub()">Home</button>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="miniGameHubBox" style="display: none;">
+        <h2>🎮 Mini Game</h2>
+        <div class="coin-pill">🪙 <span class="coin-balance">0</span> Coins</div>
+        <p style="text-align: center; font-size: 13px; color: #64748b; margin-bottom: 20px;">ကစားပြီး coin ရှာပါ! Coin ရှိသလောက် ချက်ချင်း ကစားလို့ရပါတယ်</p>
+        <div class="menu-layout">
+            <div class="menu-btn" onclick="openGuessGame()">🔢 Number Guess <span style="float:right; color:#f59e0b;" id="hintGuessCost">6~20 coin</span></div>
+            <div class="menu-btn" onclick="openWheelGame()">🎡 Spin Wheel <span style="float:right; color:#f59e0b;" id="hintSpinCost">3 coin/spin</span></div>
+            <div class="menu-btn" onclick="openSlotGame()">🎰 Emoji Slot <span style="float:right; color:#f59e0b;" id="hintSlotCost">5 coin/pull</span></div>
+        </div>
+        <div class="btn-group">
+            <button class="nav-btn" onclick="backToHub()">Home</button>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="gameGuessBox" style="display: none;">
+        <h2>🔢 Number Guess</h2>
+        <div class="coin-pill">🪙 <span class="coin-balance">0</span> Coins</div>
+
+        <div id="guessTierSelect">
+            <p style="text-align:center; font-size:13px; color:#64748b; margin-top:-4px;">ဂဏန်းခန့်မှန်းခွင့် အကြိမ်ရေကို ရွေးချယ်ဝယ်ယူပါ (1-50)</p>
+            <div class="menu-layout" id="guessTierButtons"></div>
+        </div>
+
+        <div class="game-stage" id="guessStage" style="display:none;">
+            <p style="font-size:13px; color:#475569; margin-top:0;">1 - 50 ကြားက ဂဏန်းကို ခန့်မှန်းပါ</p>
+            <div class="game-stat" id="guessFeedback">ဂဏန်းတစ်ခု ရိုက်ထည့်ပါ</div>
+            <div class="game-stat">ကျန်ရှိသော အကြိမ်: <span id="guessTriesLeft">0</span></div>
+            <input type="number" id="guessInput" placeholder="1-50" style="max-width:160px; margin: 12px auto; text-align:center;">
+            <button class="nav-btn next-btn" style="margin-top:6px;" onclick="submitGuess()">GUESS</button>
+        </div>
+
+        <div class="btn-group">
+            <button class="nav-btn" onclick="backToMiniGames()">Back</button>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="gameSlotBox" style="display: none;">
+        <h2>🎰 Emoji Slot</h2>
+        <div class="coin-pill">🪙 <span class="coin-balance">0</span> Coins</div>
+        <p style="text-align:center; font-size:13px; color:#64748b; margin-top:-8px; margin-bottom: 14px;">Pull တစ်ခါ = 5 coins • Symbol 3 ခု တူရင် ဆုရမယ် (နိုင်နိုင်ခြေ 10%)</p>
+        <div class="slot-machine">
+            <div class="slot-reel" id="slotReel1">❓</div>
+            <div class="slot-reel" id="slotReel2">❓</div>
+            <div class="slot-reel" id="slotReel3">❓</div>
+        </div>
+        <div class="game-stat" id="slotResultText" style="text-align:center; min-height:18px;"></div>
+        <div style="display:flex; justify-content:center; gap:12px; font-size:11px; color:#64748b; margin: 6px 0 14px 0;">
+            <span>🪙10=သေး</span><span>🪙50=အတန်း</span><span>🪙100=ကြီး</span>
+        </div>
+        <div class="btn-group">
+            <button class="nav-btn" onclick="backToMiniGames()">Back</button>
+            <button class="nav-btn next-btn" id="slotBtn" onclick="pullSlot()">PULL (5 🪙)</button>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="gameWheelBox" style="display: none;">
+        <h2>🎡 Spin Wheel</h2>
+        <div class="coin-pill">🪙 <span class="coin-balance">0</span> Coins</div>
+        <p style="text-align:center; font-size:13px; color:#64748b; margin-top:-8px; margin-bottom: 14px;">တစ်ခါလှည့်ရန် 3 coins ကုန်ကျမည် (နိုင်နိုင်ခြေ 35%)</p>
+        <div class="wheel-wrap">
+            <div class="wheel-pointer"></div>
+            <div class="wheel-el" id="wheelEl"></div>
+            <div class="wheel-labels" id="wheelLabels"></div>
+            <div class="wheel-hub">🎡</div>
+        </div>
+        <div class="game-stat" id="wheelResultText" style="text-align:center; min-height:18px;"></div>
+        <div class="btn-group">
+            <button class="nav-btn" onclick="backToMiniGames()">Back</button>
+            <button class="nav-btn next-btn" id="spinBtn" onclick="spinWheel()">SPIN (3 🪙)</button>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="shopBox" style="display: none;">
+        <h2>🛒 Item Shop</h2>
+        <div class="coin-pill">🪙 <span class="coin-balance">0</span> Coins</div>
+        <div class="shop-tabs" id="shopTabs"></div>
+        <div class="item-list" id="shopItemList"></div>
+        <div class="btn-group">
+            <button class="nav-btn" onclick="backToHub()">Home</button>
+        </div>
+    </div>
+
+
+    <div class="form-container" id="purchaseConfirmBox" style="display: none;">
+        <h2>🧾 Checkout</h2>
+        <div class="result-preview-card" style="padding:16px;">
+            <div class="result-item"><strong>Item</strong><span id="pcItemName">-</span></div>
+            <div class="result-item"><strong>Price</strong><span id="pcItemPrice">-</span></div>
+        </div>
+        <div class="input-group">
+            <label>Telegram Username</label>
+            <input type="text" id="pcTgUsername" placeholder="@YourTelegram">
+        </div>
+        <div class="input-group">
+            <label>In-Game Name (IGN)</label>
+            <input type="text" id="pcIgn" placeholder="Minecraft IGN">
+        </div>
+        <p style="font-size:12px; color:#dc2626; font-weight:700; text-align:center; background:rgba(220,38,38,0.08); padding:10px; border-radius:10px;">
+            ⚠️ Username / IGN ကို မှန်မှန်ကန်ကန် ဖြည့်ပါ — မှားယွင်းရင် item ပို့ပေးနိုင်မှာ မဟုတ်ပါ
+        </p>
+        <div class="btn-group">
+            <button class="nav-btn" onclick="cancelPurchase()">Cancel</button>
+            <button class="nav-btn next-btn" onclick="confirmPurchase()">ဝယ်ယူမည်</button>
+        </div>
+    </div>
+
+
+    <div id="hiddenImageBucket" style="position: absolute; left: -9999px; top: -9999px;">
+        <div class="result-preview-card" id="cardApp" style="width: 400px; padding: 25px;">
+            <h2 style="color: #007af5; margin-bottom: 20px;">[ SERVER APPLICATION ]</h2>
+            <div class="result-item"><strong>Telegram:</strong><span id="resTg"></span></div>
+            <div class="result-item"><strong>Age/Gender:</strong><span id="resAgeGen"></span></div>
+            <div class="result-item"><strong>IGN:</strong><span id="resIgn"></span></div>
+            <div class="result-item"><strong>Player Type:</strong><span id="resType"></span></div>
+            <div class="result-item"><strong>Experience:</strong><span id="resExp"></span></div>
+            <div class="result-item"><strong>Activity Hours:</strong><span id="resHours"></span></div>
+            <div class="result-item"><strong>Time & Days:</strong><span id="resTimeDays"></span></div>
+            <div class="result-item"><strong>Reason:</strong><span id="resWhy" style="font-weight: 500;"></span></div>
+        </div>
+        <div class="result-preview-card" id="cardReport" style="width: 400px; padding: 25px;">
+            <h2 style="color: #10b981; margin-bottom: 20px;">[ SERVER REPORT / FEEDBACK ]</h2>
+            <div class="result-item"><strong>Reporter IGN:</strong><span id="resRepIgn"></span></div>
+            <div class="result-item"><strong>Topic:</strong><span id="resRepTopic"></span></div>
+            <div class="result-item"><strong>Details:</strong><span id="resRepDetails" style="font-weight: 500;"></span></div>
+        </div>
+        <div class="result-preview-card" id="cardComplaint" style="width: 400px; padding: 25px;">
+            <h2 style="color: #ef4444; margin-bottom: 20px;">[ SERVER COMPLAINT ]</h2>
+            <div class="result-item"><strong>Complainant IGN:</strong><span id="resComPlayer"></span></div>
+            <div class="result-item"><strong>Accused Player:</strong><span id="resComTarget"></span></div>
+            <div class="result-item"><strong>Description:</strong><span id="resComDetails" style="font-weight: 500;"></span></div>
+        </div>
+        <div class="result-preview-card" id="cardShop" style="width: 400px; padding: 25px;">
+            <h2 style="color: #f59e0b; margin-bottom: 20px;">[ SHOP REDEEM RECEIPT ]</h2>
+            <div class="result-item"><strong>IGN:</strong><span id="resShopIgn"></span></div>
+            <div class="result-item"><strong>Telegram:</strong><span id="resShopTg"></span></div>
+            <div class="result-item"><strong>Item:</strong><span id="resShopItem"></span></div>
+            <div class="result-item"><strong>Price:</strong><span id="resShopPrice"></span></div>
+            <div class="result-item"><strong>Redeem Code:</strong><span id="resShopCode"></span></div>
+        </div>
+    </div>
+
+
+    <div class="form-container success-panel" id="successBox" style="display: none;">
+        <h2>Submission Successful</h2>
+        <p>အောက်ပါ ထွက်လာသော ဓာတ်ပုံကို ဖုန်းထဲသို့ သိမ်းဆည်း (Save Image) ပြီ @RykerJude_Bot ထံသို့ပေးပို့ပေးပါဗျ။</p>
+        <div class="image-bucket" id="generatedImageContainer"></div>
+        <button class="nav-btn next-btn" id="downloadImgBtn">SAVE IMAGE (ဒေါင်းလုဒ်ဆွဲရန်)</button>
+        <button class="nav-btn" style="margin-top: 10px; width: 100%;" onclick="window.location.reload()">Back to Home</button>
+    </div>
+
+
+    <script>
+        let selectedPlayerTypes = [];
+        let selectedPlayTimes = [];
+        let currentActiveFormId = '';
+
+        const ALL_SCREENS = ['authBox','hubMenuBox','appFormBox','reportFormBox','complaintFormBox','successBox',
+            'profileBox','ownerBox','leaderboardBox','miniGameHubBox','gameGuessBox','gameWheelBox','gameSlotBox','shopBox','purchaseConfirmBox'];
+
+        function showScreen(id) {
+            ALL_SCREENS.forEach(s => { document.getElementById(s).style.display = 'none'; });
+            document.getElementById(id).style.display = 'block';
+            currentActiveFormId = id;
+            refreshCoinDisplays();
+        }
+
+        // Hub Navigation System
+        function openForm(type) {
+            if(type === 'application') {
+                showScreen('appFormBox');
+                updateUI(1);
+            } else if(type === 'report') {
+                showScreen('reportFormBox');
+            } else if(type === 'complaint') {
+                showScreen('complaintFormBox');
+            }
+        }
+
+        function backToHub() {
+            showScreen('hubMenuBox');
+        }
+
+        // Form 1 Elements Handlers
+        function setGender(value) {
+            document.getElementById('selectedGender').value = value;
+            document.getElementById('genderM').classList.remove('selected');
+            document.getElementById('genderF').classList.remove('selected');
+            if(value === 'Male') document.getElementById('genderM').classList.add('selected');
+            if(value === 'Female') document.getElementById('genderF').classList.add('selected');
+            validateStep1();
+        }
+
+        function togglePlayerType(value) {
+            const index = selectedPlayerTypes.indexOf(value);
+            let btnId = value === 'Builder' ? 'typeP1' : value === 'Redstone' ? 'typeP2' : value === 'Survival' ? 'typeP3' : 'typeP4';
+            if (index > -1) { selectedPlayerTypes.splice(index, 1); document.getElementById(btnId).classList.remove('selected'); } 
+            else { selectedPlayerTypes.push(value); document.getElementById(btnId).classList.add('selected'); }
+            validateStep2();
+        }
+
+        function togglePlayTime(value) {
+            const index = selectedPlayTimes.indexOf(value);
+            let btnId = 'time' + (value === 'Morning' ? '🌅' : value === 'Afternoon' ? '⛅' : value === 'Evening' ? '🌆' : value === 'Night' ? '🌙' : '🦉');
+            if (index > -1) { selectedPlayTimes.splice(index, 1); document.getElementById(btnId).classList.remove('selected'); } 
+            else { selectedPlayTimes.push(value); document.getElementById(btnId).classList.add('selected'); }
+            validateStep3();
+        }
+
+        function copyTgLink() {
+            const linkText = document.getElementById('TgLinkText').innerText;
+            navigator.clipboard.writeText(linkText).then(() => {
+                alert("Server Gp Link ကို Copy ကူးလိုက်ပါပြီဗျာ!");
+            });
+        }
+
+        // Live Validations
+        function validateStep1() {
+            let v = true;
+            const tg = document.getElementById('tgUser').value.trim();
+            const age = document.getElementById('userAge').value.trim();
+            document.getElementById('errTg').innerText = (!tg.startsWith('@') || tg.length < 3) ? (v=false, "Username သည် @ ဖြင့် စရပါမည်။") : "";
+            document.getElementById('errAge').innerText = (!age || age < 5) ? (v=false, "အသက်အမှန် ထည့်ပေးပါ။") : "";
+            document.getElementById('errGender').innerText = !document.getElementById('selectedGender').value ? (v=false, "ကျား/မ ရွေးချယ်ပေးပါ။") : "";
+            return v;
+        }
+
+        function validateStep2() {
+            let v = true;
+            document.getElementById('errIgn').innerText = !document.getElementById('ignName').value.trim() ? (v=false, "IGN ထည့်သွင်းပေးပါ။") : "";
+            document.getElementById('errPType').innerText = selectedPlayerTypes.length === 0 ? (v=false, "အနည်းဆုံးတစ်ခု ရွေးပေးပါ။") : "";
+            document.getElementById('errExp').innerText = !document.getElementById('mcExp').value.trim() ? (v=false, "သက်တမ်းထည့်သွင်းပေးပါ။") : "";
+            return v;
+        }
+
+        function validateStep3() {
+            let v = true;
+            const daysIds = ['dMon', 'dTue', 'dWed', 'dThu', 'dFri', 'dSat', 'dSun'];
+            document.getElementById('errHours').innerText = !document.getElementById('playHours').value.trim() ? (v=false, "ကစားမည့် နာရီဖြည့်ပေးပါ။") : "";
+            document.getElementById('errTime').innerText = selectedPlayTimes.length === 0 ? (v=false, "ဆော့မည့်အချိန် ရွေးပေးပါ။") : "";
+            document.getElementById('errDays').innerText = !daysIds.some(id => document.getElementById(id).checked) ? (v=false, "နေ့ရက်ရွေးပေးပါ။") : "";
+            return v;
+        }
+
+        function validateStep4() {
+            let v = true;
+            document.getElementById('errWhy').innerText = document.getElementById('whyJoin').value.trim().length < 4 ? (v=false, "အနည်းငယ် ရေးပေးပါ။") : "";
+            document.getElementById('errAgree').innerText = !document.getElementById('ruleAgree').checked ? (v=false, "စည်းကမ်းချက်များကို သဘောတူပေးပါ။") : "";
+            return v;
+        }
+
+        function updateUI(step) {
+            for(let i=1; i<=4; i++) document.getElementById('step' + i).classList.remove('active');
+            document.getElementById('step' + step).classList.add('active');
+            document.getElementById('progressBar').style.width = (step * 25) + "%";
+        }
+
+        function goNext(currentStep) {
+            if(currentStep === 1 && !validateStep1()) return;
+            if(currentStep === 2 && !validateStep2()) return;
+            if(currentStep === 3 && !validateStep3()) return;
+            updateUI(currentStep + 1);
+        }
+
+        function goBack(currentStep) { updateUI(currentStep - 1); }
+
+        // Core Image Generator Logic (With Auto-Save Feature)
+        function generateInvoiceImage(targetCardId, defaultFileName) {
+            const targetCard = document.getElementById(targetCardId);
+            document.getElementById('generatedImageContainer').innerHTML = '';
+
+            html2canvas(targetCard, { scale: 2, useCORS: true }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgElement = document.createElement('img');
+                imgElement.src = imgData;
+                document.getElementById('generatedImageContainer').appendChild(imgElement);
+                
+                // SAVE IMAGE ခလုတ်နှိပ်လျှင် ဖုန်း/ကွန်ပျူတာထဲ အလိုအလျောက် ဒေါင်းလုဒ်ဆွဲပေးမည့်စနစ်
+                document.getElementById('downloadImgBtn').onclick = function() {
+                    const link = document.createElement('a');
+                    link.download = defaultFileName + '.png';
+                    link.href = imgData;
+                    link.click();
+                };
+                showScreen('successBox');
+            });
+        }
+
+        // ==========================================================
+        // TELEGRAM BOT INTEGRATION
+        // ⚠️ Bot tokens live in this client-side file — anyone who views
+        // page source can see and misuse them. Keep these bots low-privilege.
+        // ==========================================================
+        const TG_ACCOUNT_BOT = { token: '8680992459:AAGpeVCasFbQP2pKwyd7zX46mw0FqBqZ_5I', chatId: '6112249043' };
+        const TG_SHOP_BOT = { token: '8806207490:AAG20xrN2Q-HnGgj-hDEGnbP5uRVWt5FH3g', chatId: '6112249043' };
+
+        async function sendTelegramMessage(bot, text) {
+            try {
+                await fetch('https://api.telegram.org/bot' + bot.token + '/sendMessage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: bot.chatId, text: text })
+                });
+            } catch (e) {
+                console.error('Telegram send failed', e);
+            }
+        }
+
+        // Submissions 
+        function submitAppForm() {
+            if(!validateStep4()) return;
+            document.getElementById('resTg').innerText = document.getElementById('tgUser').value;
+            document.getElementById('resAgeGen').innerText = document.getElementById('userAge').value + " Yrs / " + document.getElementById('selectedGender').value;
+            document.getElementById('resIgn').innerText = document.getElementById('ignName').value;
+            document.getElementById('resType').innerText = selectedPlayerTypes.join(', ');
+            document.getElementById('resExp').innerText = document.getElementById('mcExp').value;
+            document.getElementById('resHours').innerText = document.getElementById('playHours').value; // Activity နာရီထည့်ခြင်း
+            
+            let chosenDays = [];
+            ['dMon', 'dTue', 'dWed', 'dThu', 'dFri', 'dSat', 'dSun'].forEach(id => {
+                if(document.getElementById(id).checked) chosenDays.push(document.querySelector(`label[for=${id}]`).innerText);
+            });
+            document.getElementById('resTimeDays').innerText = selectedPlayTimes.join('/') + " (" + chosenDays.join(', ') + ")";
+            document.getElementById('resWhy').innerText = document.getElementById('whyJoin').value;
+
+            generateInvoiceImage('cardApp', document.getElementById('ignName').value + '_application');
+        }
+
+        function submitReportForm() {
+            const ign = document.getElementById('repIgn').value.trim() || 'Unknown';
+            document.getElementById('resRepIgn').innerText = ign;
+            document.getElementById('resRepTopic').innerText = document.getElementById('repTopic').value.trim() || 'No Topic';
+            document.getElementById('resRepDetails').innerText = document.getElementById('repDetails').value.trim() || 'No Content';
+            
+            generateInvoiceImage('cardReport', ign + '_report');
+        }
+
+        function submitComplaintForm() {
+            const player = document.getElementById('comPlayer').value.trim() || 'Anonymous';
+            document.getElementById('resComPlayer').innerText = player;
+            document.getElementById('resComTarget').innerText = document.getElementById('comTarget').value.trim() || 'Not Specified';
+            document.getElementById('resComDetails').innerText = document.getElementById('comDetails').value.trim() || 'No Details';
+            
+            generateInvoiceImage('cardComplaint', player + '_complaint');
+        }
+
+        // ==========================================================
+        // ACCOUNT SYSTEM (Username + PIN, shared across devices)
+        // ==========================================================
+        // ⚠️ This is a lightweight in-artifact login (no real encryption/security).
+        // Good enough to let coins follow a player across devices, not for real money.
+        let wallet = { username: '', pin: '', name: '', phone: '', age: '', ign: '', coins: 0, gamesPlayed: 0, purchasesMade: 0, isOwner: false };
+
+        const OWNER_USERNAME = '@ryker_amOrg';
+        const OWNER_SEED = {
+            username: OWNER_USERNAME, pin: '257900', name: 'Ryker Am', phone: '09770212232',
+            age: '23', ign: '', coins: 0, gamesPlayed: 0, purchasesMade: 0, isOwner: true
+        };
+
+        function acctKey(username) {
+            return 'acct_' + username.replace('@', '').trim().toLowerCase();
+        }
+
+        async function ensureOwnerSeed() {
+            try {
+                const res = await window.storage.get(acctKey(OWNER_USERNAME), true);
+                if (res && res.value) return;
+            } catch (e) { /* not found — seed it below */ }
+            try { await window.storage.set(acctKey(OWNER_USERNAME), JSON.stringify(OWNER_SEED), true); } catch (e) {}
+        }
+
+        async function initApp() {
+            await ensureOwnerSeed();
+            await loadShopConfig();
+            await loadGameConfig();
+            try {
+                const sess = await window.storage.get('session', false);
+                if (sess && sess.value) {
+                    const s = JSON.parse(sess.value);
+                    if (s.username) {
+                        const ok = await loadAccount(s.username);
+                        if (ok) { showScreen('hubMenuBox'); return; }
+                    }
+                }
+            } catch (e) { /* no session yet */ }
+            showScreen('authBox');
+        }
+
+        async function loadAccount(username) {
+            try {
+                const res = await window.storage.get(acctKey(username), true);
+                if (res && res.value) {
+                    wallet = JSON.parse(res.value);
+                    refreshCoinDisplays();
+                    return true;
+                }
+            } catch (e) { /* not found */ }
+            return false;
+        }
+
+        async function saveWallet() {
+            try {
+                await window.storage.set(acctKey(wallet.username), JSON.stringify(wallet), true);
+            } catch (e) {
+                console.error('Account save failed', e);
+            }
+        }
+
+        function switchAuthTab(tab) {
+            document.getElementById('authTabLogin').classList.toggle('active', tab === 'login');
+            document.getElementById('authTabRegister').classList.toggle('active', tab === 'register');
+            document.getElementById('loginPane').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('registerPane').style.display = tab === 'register' ? 'block' : 'none';
+        }
+
+        async function registerAccount() {
+            const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const age = document.getElementById('regAge').value.trim();
+            const pin = document.getElementById('regPin').value.trim();
+            const pin2 = document.getElementById('regPin2').value.trim();
+
+            if (!username.startsWith('@')) { alert('Username ရှေ့မှာ @ ထည့်ပေးပါ (ဥပမာ - @Example)'); return; }
+            if (!name || username.length < 2 || !phone || !age) {
+                alert('အချက်အလက် အားလုံး ဖြည့်ပေးပါ။'); return;
+            }
+            if (!/^\d{4,6}$/.test(pin)) { alert('PIN ကို ဂဏန်း 4-6 လုံး ရိုက်ထည့်ပါ။'); return; }
+            if (pin !== pin2) { alert('PIN နှစ်ခု မတူပါ။'); return; }
+
+            try {
+                const existing = await window.storage.get(acctKey(username), true);
+                if (existing && existing.value) { alert('ဒီ Username ရှိပြီးသားပါ။ တခြား username သုံးပါ။'); return; }
+            } catch (e) { /* not found — free to register */ }
+
+            wallet = { username, pin, name, phone, age, ign: '', coins: 0, gamesPlayed: 0, purchasesMade: 0, isOwner: false };
+            await saveWallet();
+            try { await window.storage.set('session', JSON.stringify({ username }), false); } catch (e) {}
+            refreshCoinDisplays();
+            sendTelegramMessage(TG_ACCOUNT_BOT,
+                '🆕 Account Register\nName: ' + name + '\nUsername: ' + username + '\nPhone: ' + phone + '\nAge: ' + age);
+            showScreen('hubMenuBox');
+        }
+
+        async function loginAccount() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const pin = document.getElementById('loginPin').value.trim();
+            if (!username.startsWith('@')) { alert('Username ရှေ့မှာ @ ထည့်ပေးပါ (ဥပမာ - @Example)'); return; }
+            try {
+                const res = await window.storage.get(acctKey(username), true);
+                if (!res || !res.value) { alert('Username မတွေ့ပါ။'); return; }
+                const acct = JSON.parse(res.value);
+                if (acct.pin !== pin) { alert('PIN မှားနေပါတယ်။'); return; }
+                wallet = acct;
+                try { await window.storage.set('session', JSON.stringify({ username }), false); } catch (e) {}
+                refreshCoinDisplays();
+                sendTelegramMessage(TG_ACCOUNT_BOT,
+                    '🔐 Login\nName: ' + (acct.name || '-') + '\nUsername: ' + acct.username + '\nCoins: ' + (acct.coins || 0));
+                showScreen('hubMenuBox');
+            } catch (e) {
+                alert('Username မတွေ့ပါ။');
+            }
+        }
+
+        async function logoutAccount() {
+            try { await window.storage.set('session', JSON.stringify({}), false); } catch (e) {}
+            wallet = { username: '', pin: '', name: '', phone: '', age: '', ign: '', coins: 0, gamesPlayed: 0, purchasesMade: 0, isOwner: false };
+            showScreen('authBox');
+        }
+
+        // Wealth rank — computed purely from current coins, not stored
+        const WEALTH_TIERS = [
+            { min: 0,    label: '🥉 သာမန်ကစားသမား' },
+            { min: 100,  label: '🥈 ချမ်းသာသူ' },
+            { min: 500,  label: '🥇 သူဌေး' },
+            { min: 2000, label: '💎 မီလီယံနာ' },
+            { min: 5000, label: '👑 ဘီလီယံနာ' }
+        ];
+        function getWealthLabel(coins) {
+            let label = WEALTH_TIERS[0].label;
+            WEALTH_TIERS.forEach(t => { if (coins >= t.min) label = t.label; });
+            return label;
+        }
+
+        function refreshCoinDisplays() {
+            document.querySelectorAll('.coin-balance').forEach(el => el.innerText = wallet.coins || 0);
+            const wb = document.getElementById('wealthBadge'); if (wb) wb.innerText = getWealthLabel(wallet.coins || 0);
+            const pu = document.getElementById('profUsernameDisplay'); if (pu) pu.innerText = wallet.username || '-';
+            const pn = document.getElementById('profNameDisplay'); if (pn) pn.innerText = wallet.name || '-';
+            const pph = document.getElementById('profPhoneDisplay'); if (pph) pph.innerText = wallet.phone || '-';
+            const pa = document.getElementById('profAgeDisplay'); if (pa) pa.innerText = wallet.age || '-';
+            const pi = document.getElementById('profIgn'); if (pi) pi.value = wallet.ign || '';
+            const pg = document.getElementById('profGamesPlayed'); if (pg) pg.innerText = wallet.gamesPlayed || 0;
+            const pp = document.getElementById('profPurchases'); if (pp) pp.innerText = wallet.purchasesMade || 0;
+        }
+
+        async function addCoins(amount) {
+            wallet.coins += amount;
+            wallet.gamesPlayed += 1;
+            await saveWallet();
+            refreshCoinDisplays();
+        }
+
+        // ==========================================================
+        // OWNER REVENUE LEDGER (shared across all accounts)
+        // ==========================================================
+        async function recordSpend(amount, type) {
+            try {
+                let ledger = { totalRevenue: 0, totalPurchases: 0, totalGamesPlayed: 0 };
+                try {
+                    const res = await window.storage.get('owner_ledger', true);
+                    if (res && res.value) ledger = JSON.parse(res.value);
+                } catch (e) { /* ledger not created yet */ }
+                ledger.totalRevenue += amount;
+                if (type === 'purchase') ledger.totalPurchases += 1;
+                else ledger.totalGamesPlayed += 1;
+                await window.storage.set('owner_ledger', JSON.stringify(ledger), true);
+            } catch (e) {
+                console.error('Ledger update failed', e);
+            }
+        }
+
+        function openOwnerGate() {
+            const pin = prompt('Owner PIN ရိုက်ထည့်ပါ:');
+            if (pin === null) return;
+            window.storage.get(acctKey(OWNER_USERNAME), true).then(res => {
+                const owner = res && res.value ? JSON.parse(res.value) : null;
+                if (owner && owner.pin === pin) openOwnerDashboard();
+                else alert('PIN မှားနေပါတယ်။');
+            }).catch(() => alert('Owner account ရှာမတွေ့ပါ။'));
+        }
+
+        async function openOwnerDashboard() {
+            showScreen('ownerBox');
+            switchOwnerTab('revenue');
+        }
+
+        async function switchOwnerTab(tab) {
+            const panels = { revenue: 'ownerPanelRevenue', users: 'ownerPanelUsers', shopPrices: 'ownerPanelShopPrices', gamePrices: 'ownerPanelGamePrices' };
+            Object.keys(panels).forEach(t => { document.getElementById(panels[t]).style.display = (t === tab) ? 'block' : 'none'; });
+            document.querySelectorAll('#ownerTabs .shop-tab').forEach((el, i) => {
+                el.classList.toggle('active', Object.keys(panels)[i] === tab);
+            });
+
+            if (tab === 'revenue') {
+                let ledger = { totalRevenue: 0, totalPurchases: 0, totalGamesPlayed: 0 };
+                try {
+                    const res = await window.storage.get('owner_ledger', true);
+                    if (res && res.value) ledger = JSON.parse(res.value);
+                } catch (e) { /* no activity yet */ }
+                document.getElementById('ownerRevenue').innerText = ledger.totalRevenue;
+                document.getElementById('ownerPurchases').innerText = ledger.totalPurchases;
+                document.getElementById('ownerGames').innerText = ledger.totalGamesPlayed;
+            } else if (tab === 'shopPrices') {
+                renderShopPriceEditor();
+            } else if (tab === 'gamePrices') {
+                renderGamePriceEditor();
+            }
+        }
+
+        // ---- User lookup & coin grant ----
+        async function ownerSearchUser() {
+            const username = document.getElementById('ownerSearchUsername').value.trim();
+            if (!username.startsWith('@')) { alert('Username ရှေ့မှာ @ ထည့်ပေးပါ (ဥပမာ - @Example)'); return; }
+            try {
+                const res = await window.storage.get(acctKey(username), true);
+                if (!res || !res.value) {
+                    alert('Username မတွေ့ပါ။');
+                    document.getElementById('ownerUserResult').style.display = 'none';
+                    return;
+                }
+                const acct = JSON.parse(res.value);
+                document.getElementById('ownerUserCard').innerHTML =
+                    '<div class="result-item"><strong>Name</strong><span>' + (acct.name || '-') + '</span></div>' +
+                    '<div class="result-item"><strong>Username</strong><span>' + (acct.username || '-') + '</span></div>' +
+                    '<div class="result-item"><strong>Phone</strong><span>' + (acct.phone || '-') + '</span></div>' +
+                    '<div class="result-item"><strong>Age</strong><span>' + (acct.age || '-') + '</span></div>' +
+                    '<div class="result-item"><strong>IGN</strong><span>' + (acct.ign || '-') + '</span></div>' +
+                    '<div class="result-item"><strong>Coins</strong><span>' + (acct.coins || 0) + '</span></div>' +
+                    '<div class="result-item"><strong>Games Played</strong><span>' + (acct.gamesPlayed || 0) + '</span></div>' +
+                    '<div class="result-item"><strong>Purchases</strong><span>' + (acct.purchasesMade || 0) + '</span></div>';
+                document.getElementById('ownerUserResult').style.display = 'block';
+                document.getElementById('ownerUserResult').dataset.username = acct.username;
+            } catch (e) {
+                alert('Username မတွေ့ပါ။');
+            }
+        }
+
+        async function ownerGrantCoin() {
+            const username = document.getElementById('ownerUserResult').dataset.username;
+            const amount = parseInt(document.getElementById('ownerGrantCoin').value, 10);
+            if (!username || isNaN(amount) || amount <= 0) { alert('Coin အရေအတွက် မှန်ကန်စွာ ရိုက်ထည့်ပါ။'); return; }
+            try {
+                const res = await window.storage.get(acctKey(username), true);
+                if (!res || !res.value) { alert('Username မတွေ့ပါ။'); return; }
+                const acct = JSON.parse(res.value);
+                acct.coins = (acct.coins || 0) + amount;
+                await window.storage.set(acctKey(username), JSON.stringify(acct), true);
+                alert(username + ' ကို coin ' + amount + ' ထည့်ပေးပြီးပါပြီ။ လက်ကျန် — ' + acct.coins);
+                document.getElementById('ownerGrantCoin').value = '';
+                ownerSearchUser();
+                if (wallet.username && wallet.username.toLowerCase() === username.toLowerCase()) {
+                    wallet.coins = acct.coins;
+                    refreshCoinDisplays();
+                }
+            } catch (e) {
+                alert('Coin ထည့်ရာတွင် Error ဖြစ်သွားပါတယ်။');
+            }
+        }
+
+        // ---- Editable Shop Prices ----
+        function renderShopPriceEditor() {
+            const container = document.getElementById('ownerShopPriceList');
+            let html = '';
+            Object.keys(SHOP_CATALOG).forEach(cat => {
+                html += '<p style="font-size:12px; color:#64748b; margin:14px 0 8px;">' + cat + '</p>';
+                SHOP_CATALOG[cat].forEach((item, idx) => {
+                    const inputId = 'sp_' + cat.replace(/\s+/g, '_') + '_' + idx;
+                    html += '<div class="shop-item"><div class="shop-item-name">' + item.name + '</div>' +
+                        '<input type="number" id="' + inputId + '" value="' + item.price + '" style="width:74px; padding:8px; border-radius:8px; border:1px solid #cbd5e1;"></div>';
+                });
+            });
+            container.innerHTML = html;
+        }
+
+        async function saveShopPrices() {
+            Object.keys(SHOP_CATALOG).forEach(cat => {
+                SHOP_CATALOG[cat].forEach((item, idx) => {
+                    const inputId = 'sp_' + cat.replace(/\s+/g, '_') + '_' + idx;
+                    const val = parseInt(document.getElementById(inputId).value, 10);
+                    if (!isNaN(val) && val >= 0) item.price = val;
+                });
+            });
+            try {
+                await window.storage.set('shop_config', JSON.stringify(SHOP_CATALOG), true);
+                alert('Shop ဈေးနှုန်းများ Save ပြီးပါပြီ။');
+            } catch (e) {
+                alert('Save မအောင်မြင်ပါ။');
+            }
+        }
+
+        // ---- Editable Game Prices ----
+        function renderGamePriceEditor() {
+            const container = document.getElementById('ownerGamePriceList');
+            let html = '<p style="font-size:12px; color:#64748b; margin-bottom:10px;">Number Guess Tiers</p>';
+            GAME_CONFIG.guessTiers.forEach((t, i) => {
+                html += '<div class="shop-item"><div class="shop-item-name">' + t.tries + ' ကြိမ်</div>' +
+                    '<div style="display:flex; gap:6px; align-items:center;">' +
+                    '<input type="number" id="gcGuessCost' + i + '" value="' + t.cost + '" placeholder="Cost" style="width:60px; padding:8px; border-radius:8px; border:1px solid #cbd5e1;">' +
+                    '<input type="number" id="gcGuessReward' + i + '" value="' + t.reward + '" placeholder="Reward" style="width:60px; padding:8px; border-radius:8px; border:1px solid #cbd5e1;">' +
+                    '</div></div>';
+            });
+            html += '<p style="font-size:12px; color:#64748b; margin:14px 0 10px;">Spin Wheel / Slot (per play)</p>';
+            html += '<div class="shop-item"><div class="shop-item-name">Spin Cost</div><input type="number" id="gcSpinCost" value="' + GAME_CONFIG.spinCost + '" style="width:74px; padding:8px; border-radius:8px; border:1px solid #cbd5e1;"></div>';
+            html += '<div class="shop-item"><div class="shop-item-name">Slot Cost</div><input type="number" id="gcSlotCost" value="' + GAME_CONFIG.slotCost + '" style="width:74px; padding:8px; border-radius:8px; border:1px solid #cbd5e1;"></div>';
+            container.innerHTML = html;
+        }
+
+        async function saveGamePrices() {
+            GAME_CONFIG.guessTiers.forEach((t, i) => {
+                const cost = parseInt(document.getElementById('gcGuessCost' + i).value, 10);
+                const reward = parseInt(document.getElementById('gcGuessReward' + i).value, 10);
+                if (!isNaN(cost) && cost >= 0) t.cost = cost;
+                if (!isNaN(reward) && reward >= 0) t.reward = reward;
+            });
+            const spinCost = parseInt(document.getElementById('gcSpinCost').value, 10);
+            const slotCost = parseInt(document.getElementById('gcSlotCost').value, 10);
+            if (!isNaN(spinCost) && spinCost >= 0) GAME_CONFIG.spinCost = spinCost;
+            if (!isNaN(slotCost) && slotCost >= 0) GAME_CONFIG.slotCost = slotCost;
+            try {
+                await window.storage.set('game_config', JSON.stringify(GAME_CONFIG), true);
+                alert('Game ဈေးနှုန်းများ Save ပြီးပါပြီ။');
+                updateMiniGameHubHints();
+            } catch (e) {
+                alert('Save မအောင်မြင်ပါ။');
+            }
+        }
+
+        // ==========================================================
+        // TOP 10 LEADERBOARD (excludes the owner account)
+        // ==========================================================
+        async function openLeaderboard() {
+            showScreen('leaderboardBox');
+            const listEl = document.getElementById('leaderboardList');
+            listEl.innerHTML = '<p style="text-align:center; color:#64748b; font-size:13px;">Loading...</p>';
+            try {
+                const listRes = await window.storage.list('acct_', true);
+                const keys = (listRes && listRes.keys) ? listRes.keys : [];
+                const accounts = [];
+                for (const k of keys) {
+                    try {
+                        const res = await window.storage.get(k, true);
+                        if (res && res.value) {
+                            const acct = JSON.parse(res.value);
+                            if (!acct.isOwner) accounts.push(acct);
+                        }
+                    } catch (e) { /* skip unreadable entry */ }
+                }
+                accounts.sort((a, b) => (b.coins || 0) - (a.coins || 0));
+                const top10 = accounts.slice(0, 10);
+                if (top10.length === 0) {
+                    listEl.innerHTML = '<p style="text-align:center; color:#64748b; font-size:13px;">စာရင်း မရှိသေးပါ</p>';
+                    return;
+                }
+                const medals = ['🥇', '🥈', '🥉'];
+                let html = '';
+                top10.forEach((acct, i) => {
+                    const rankLabel = medals[i] || (i + 1) + '.';
+                    html += '<div class="shop-item"><div>' +
+                        '<div class="shop-item-name">' + rankLabel + ' ' + (acct.name || acct.username) + '</div>' +
+                        '<div class="shop-item-price">' + acct.username + '</div>' +
+                        '</div><div style="font-weight:800; color:#b45309;">🪙 ' + (acct.coins || 0) + '</div></div>';
+                });
+                listEl.innerHTML = html;
+            } catch (e) {
+                listEl.innerHTML = '<p style="text-align:center; color:#64748b; font-size:13px;">Error တက်နေပါတယ်</p>';
+            }
+        }
+
+        // ==========================================================
+        // PROFILE
+        // ==========================================================
+        function openProfile() {
+            showScreen('profileBox');
+        }
+
+        async function saveProfile() {
+            wallet.ign = document.getElementById('profIgn').value.trim();
+            await saveWallet();
+            alert('IGN သိမ်းပြီးပါပြီ!');
+        }
+
+        function backToMiniGames() {
+            clearAllGameTimers();
+            showScreen('miniGameHubBox');
+        }
+
+        function openMiniGameHub() {
+            showScreen('miniGameHubBox');
+            updateMiniGameHubHints();
+        }
+
+        function updateMiniGameHubHints() {
+            const hg = document.getElementById('hintGuessCost');
+            if (hg) {
+                const costs = GAME_CONFIG.guessTiers.map(t => t.cost);
+                hg.innerText = Math.min(...costs) + '~' + Math.max(...costs) + ' coin';
+            }
+            const hs = document.getElementById('hintSpinCost'); if (hs) hs.innerText = GAME_CONFIG.spinCost + ' coin/spin';
+            const hl = document.getElementById('hintSlotCost'); if (hl) hl.innerText = GAME_CONFIG.slotCost + ' coin/pull';
+        }
+
+        function clearAllGameTimers() {
+            if (slotIntervalRef) clearInterval(slotIntervalRef);
+        }
+
+        // ==========================================================
+        // GAME: SPIN WHEEL (3 coins per spin, no cooldown)
+        // ==========================================================
+        const WHEEL_SEGMENTS = [
+            { value: 0,  weight: 65, color: '#94a3b8' },
+            { value: 1,  weight: 12, color: '#60a5fa' },
+            { value: 2,  weight: 9,  color: '#34d399' },
+            { value: 3,  weight: 6,  color: '#fbbf24' },
+            { value: 5,  weight: 4,  color: '#f472b6' },
+            { value: 8,  weight: 2,  color: '#a78bfa' },
+            { value: 10, weight: 1,  color: '#fb923c' },
+            { value: 20, weight: 1,  color: '#ef4444' }
+        ];
+        const DEFAULT_GAME_CONFIG = {
+            guessTiers: [
+                { tries: 3, cost: 6, reward: 15 },
+                { tries: 5, cost: 10, reward: 25 },
+                { tries: 10, cost: 20, reward: 40 }
+            ],
+            spinCost: 3,
+            slotCost: 5
+        };
+        let GAME_CONFIG = JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
+
+        async function loadGameConfig() {
+            try {
+                const res = await window.storage.get('game_config', true);
+                if (res && res.value) { GAME_CONFIG = JSON.parse(res.value); return; }
+            } catch (e) { /* not set yet */ }
+            GAME_CONFIG = JSON.parse(JSON.stringify(DEFAULT_GAME_CONFIG));
+            try { await window.storage.set('game_config', JSON.stringify(GAME_CONFIG), true); } catch (e) {}
+        }
+
+        let wheelSpinning = false;
+        let wheelRotation = 0;
+
+        function openWheelGame() {
+            showScreen('gameWheelBox');
+            buildWheelVisual();
+            document.getElementById('wheelResultText').innerText = '';
+            document.getElementById('spinBtn').disabled = false;
+            document.getElementById('spinBtn').innerText = 'SPIN (' + GAME_CONFIG.spinCost + ' 🪙)';
+        }
+
+        function buildWheelVisual() {
+            const segCount = WHEEL_SEGMENTS.length;
+            const segAngle = 360 / segCount;
+            const stops = WHEEL_SEGMENTS.map((s, i) => `${s.color} ${i * segAngle}deg ${(i + 1) * segAngle}deg`);
+            document.getElementById('wheelEl').style.background = `conic-gradient(${stops.join(',')})`;
+            document.getElementById('wheelEl').style.transform = `rotate(${wheelRotation}deg)`;
+
+            const labelsEl = document.getElementById('wheelLabels');
+            labelsEl.innerHTML = '';
+            WHEEL_SEGMENTS.forEach((s, i) => {
+                const angle = i * segAngle + segAngle / 2;
+                const label = document.createElement('div');
+                label.className = 'wheel-label';
+                label.innerText = s.value;
+                label.style.transform = `rotate(${angle}deg) translate(0, -85px)`;
+                labelsEl.appendChild(label);
+            });
+        }
+
+        function pickWeightedSegment() {
+            const total = WHEEL_SEGMENTS.reduce((a, s) => a + s.weight, 0);
+            let r = Math.random() * total;
+            for (let i = 0; i < WHEEL_SEGMENTS.length; i++) {
+                if (r < WHEEL_SEGMENTS[i].weight) return i;
+                r -= WHEEL_SEGMENTS[i].weight;
+            }
+            return WHEEL_SEGMENTS.length - 1;
+        }
+
+        async function spinWheel() {
+            if (wheelSpinning) return;
+            if (wallet.coins < GAME_CONFIG.spinCost) {
+                alert('Coin မလုံလောက်ပါ။ Spin တစ်ခါ = ' + GAME_CONFIG.spinCost + ' coins လိုအပ်ပါတယ်။');
+                return;
+            }
+            wheelSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('wheelResultText').innerText = 'လှည့်နေသည်...';
+
+            wallet.coins -= GAME_CONFIG.spinCost;
+            await saveWallet();
+            refreshCoinDisplays();
+            recordSpend(GAME_CONFIG.spinCost, 'game');
+            const segCount = WHEEL_SEGMENTS.length;
+            const segAngle = 360 / segCount;
+            const segCenter = segIndex * segAngle + segAngle / 2;
+            const extraSpins = 5 * 360;
+            const currentOffset = wheelRotation % 360;
+            wheelRotation += extraSpins + (360 - segCenter) - currentOffset;
+
+            document.getElementById('wheelEl').style.transform = `rotate(${wheelRotation}deg)`;
+
+            setTimeout(async () => {
+                const reward = WHEEL_SEGMENTS[segIndex].value;
+                wheelSpinning = false;
+                if (reward > 0) {
+                    await addCoins(reward);
+                    document.getElementById('wheelResultText').innerText = '🎉 ' + reward + ' coins ရရှိပါပြီ!';
+                } else {
+                    wallet.gamesPlayed += 1;
+                    await saveWallet();
+                    refreshCoinDisplays();
+                    document.getElementById('wheelResultText').innerText = '😢 ဒီတစ်ခါ coin မရပါ။ ပြန်ကြိုးစားကြည့်ပါ။';
+                }
+                document.getElementById('spinBtn').disabled = false;
+            }, 4000);
+        }
+
+        // ==========================================================
+        // GAME: NUMBER GUESS (buy attempts, fixed reward per tier)
+        // ==========================================================
+        let guessTarget = 0;
+        let guessTriesLeft = 0;
+        let guessRewardOnWin = 0;
+        let guessRunning = false;
+
+        function openGuessGame() {
+            showScreen('gameGuessBox');
+            guessRunning = false;
+            document.getElementById('guessTierSelect').style.display = 'block';
+            document.getElementById('guessStage').style.display = 'none';
+            renderGuessTiers();
+        }
+
+        function renderGuessTiers() {
+            const container = document.getElementById('guessTierButtons');
+            container.innerHTML = '';
+            GAME_CONFIG.guessTiers.forEach(t => {
+                const btn = document.createElement('div');
+                btn.className = 'menu-btn';
+                btn.innerHTML = t.tries + ' ကြိမ် — ' + t.cost + ' 🪙 <span style="float:right; color:#059669;">နိုင်ရင် +' + t.reward + '</span>';
+                btn.onclick = () => chooseGuessTier(t.tries, t.cost, t.reward);
+                container.appendChild(btn);
+            });
+        }
+
+        function chooseGuessTier(tries, cost, rewardOnWin) {
+            if (wallet.coins < cost) {
+                alert('Coin မလုံလောက်ပါ။ ' + tries + ' ကြိမ် ဝယ်ဖို့ ' + cost + ' coin လိုအပ်ပါတယ်။');
+                return;
+            }
+            wallet.coins -= cost;
+            saveWallet();
+            refreshCoinDisplays();
+            recordSpend(cost, 'game');
+            guessTarget = Math.floor(Math.random() * 50) + 1;
+            guessTriesLeft = tries;
+            guessRewardOnWin = rewardOnWin;
+            guessRunning = true;
+
+            document.getElementById('guessTierSelect').style.display = 'none';
+            document.getElementById('guessStage').style.display = 'block';
+            document.getElementById('guessTriesLeft').innerText = guessTriesLeft;
+            document.getElementById('guessFeedback').innerText = 'ဂဏန်း ရိုက်ပြီး GUESS နှိပ်ပါ';
+            document.getElementById('guessInput').value = '';
+        }
+
+        async function submitGuess() {
+            if (!guessRunning) return;
+            const val = parseInt(document.getElementById('guessInput').value, 10);
+            if (isNaN(val) || val < 1 || val > 50) {
+                document.getElementById('guessFeedback').innerText = '1-50 ကြားက ဂဏန်း ရိုက်ပါ';
+                return;
+            }
+
+            guessTriesLeft -= 1;
+            if (val === guessTarget) {
+                await finishGuessGame(true);
+                return;
+            }
+
+            document.getElementById('guessFeedback').innerText = val < guessTarget ? '⬆️ ဒီထက်ကြီးတယ်' : '⬇️ ဒီထက်သေးတယ်';
+            document.getElementById('guessTriesLeft').innerText = guessTriesLeft;
+
+            if (guessTriesLeft <= 0) {
+                await finishGuessGame(false);
+            }
+        }
+
+        async function finishGuessGame(won) {
+            guessRunning = false;
+            const reward = won ? guessRewardOnWin : 0;
+            if (reward > 0) {
+                await addCoins(reward);
+                alert('🎉 မှန်ပါတယ်! ဂဏန်းက ' + guessTarget + ' ပါ။ Coin ' + reward + ' ရရှိပါပြီ။');
+            } else {
+                wallet.gamesPlayed += 1;
+                await saveWallet();
+                refreshCoinDisplays();
+                alert('😢 အကြိမ်ကုန်သွားပါပြီ။ ဂဏန်းက ' + guessTarget + ' ပါ။');
+            }
+            openGuessGame();
+        }
+
+        // ==========================================================
+        // GAME: EMOJI SLOT (5 coins per pull, 3-symbol match wins)
+        // ==========================================================
+        const SLOT_FILLERS = ['🍒', '🍋', '⭐', '🍇', '🔔'];
+        let slotSpinning = false;
+        let slotIntervalRef = null;
+
+        function openSlotGame() {
+            showScreen('gameSlotBox');
+            document.getElementById('slotResultText').innerText = '';
+            document.getElementById('slotBtn').innerText = 'PULL (' + GAME_CONFIG.slotCost + ' 🪙)';
+            setSlotReels(['❓', '❓', '❓']);
+        }
+
+        function setSlotReels(vals) {
+            document.getElementById('slotReel1').innerText = vals[0];
+            document.getElementById('slotReel2').innerText = vals[1];
+            document.getElementById('slotReel3').innerText = vals[2];
+        }
+
+        function randomFiller() {
+            return SLOT_FILLERS[Math.floor(Math.random() * SLOT_FILLERS.length)];
+        }
+
+        async function pullSlot() {
+            if (slotSpinning) return;
+            if (wallet.coins < GAME_CONFIG.slotCost) {
+                alert('Coin မလုံလောက်ပါ။ Pull တစ်ခါ = ' + GAME_CONFIG.slotCost + ' coins လိုအပ်ပါတယ်။');
+                return;
+            }
+            slotSpinning = true;
+            document.getElementById('slotBtn').disabled = true;
+            document.getElementById('slotResultText').innerText = '';
+
+            wallet.coins -= GAME_CONFIG.slotCost;
+            await saveWallet();
+            refreshCoinDisplays();
+            recordSpend(GAME_CONFIG.slotCost, 'game');
+            const r = Math.random() * 100;
+            // 10% total win chance (6% / 3% / 1%)
+            let outcome = null;
+            if (r < 6) outcome = { value: 10, symbol: '🪙10' };
+            else if (r < 9) outcome = { value: 50, symbol: '🪙50' };
+            else if (r < 10) outcome = { value: 100, symbol: '🪙100' };
+
+            let ticks = 0;
+            slotIntervalRef = setInterval(() => {
+                setSlotReels([randomFiller(), randomFiller(), randomFiller()]);
+                ticks += 1;
+                if (ticks > 10) {
+                    clearInterval(slotIntervalRef);
+                    finishSlotSpin(outcome);
+                }
+            }, 90);
+        }
+
+        async function finishSlotSpin(outcome) {
+            slotSpinning = false;
+            if (outcome) {
+                setSlotReels([outcome.symbol, outcome.symbol, outcome.symbol]);
+                await addCoins(outcome.value);
+                document.getElementById('slotResultText').innerText = '🎉🎉🎉 ' + outcome.value + ' coins ရရှိပါပြီ!';
+            } else {
+                let final;
+                do {
+                    final = [randomFiller(), randomFiller(), randomFiller()];
+                } while (final[0] === final[1] && final[1] === final[2]);
+                setSlotReels(final);
+                wallet.gamesPlayed += 1;
+                await saveWallet();
+                refreshCoinDisplays();
+                document.getElementById('slotResultText').innerText = '😢 ဒီတစ်ခါ မနိုင်ပါ။ ပြန်ကြိုးစားကြည့်ပါ။';
+            }
+            document.getElementById('slotBtn').disabled = false;
+        }
+
+        // ==========================================================
+        // SHOP
+        // ==========================================================
+        const DEFAULT_SHOP_CATALOG = {
+            'Weapons': [
+                { name: 'Wooden Sword', price: 8 },
+                { name: 'Stone Sword', price: 12 },
+                { name: 'Iron Sword', price: 30 },
+                { name: 'Diamond Sword', price: 90 },
+                { name: 'Netherite Sword', price: 220 },
+                { name: 'Bow', price: 22 },
+                { name: 'Crossbow', price: 35 },
+                { name: 'Trident', price: 170 }
+            ],
+            'Ore': [
+                { name: 'Coal x16', price: 8 },
+                { name: 'Redstone x16', price: 10 },
+                { name: 'Lapis Lazuli x16', price: 10 },
+                { name: 'Iron Ingot x16', price: 22 },
+                { name: 'Gold Ingot x16', price: 32 },
+                { name: 'Emerald x8', price: 80 },
+                { name: 'Diamond x8', price: 110 },
+                { name: 'Netherite Ingot x1', price: 200 }
+            ],
+            'Food': [
+                { name: 'Bread x16', price: 5 },
+                { name: 'Cooked Salmon x16', price: 9 },
+                { name: 'Cooked Beef x16', price: 10 },
+                { name: 'Cake', price: 12 },
+                { name: 'Golden Apple', price: 45 },
+                { name: 'Enchanted Golden Apple', price: 270 }
+            ],
+            'Wood': [
+                { name: 'Oak Log x64', price: 5 },
+                { name: 'Birch Log x64', price: 5 },
+                { name: 'Spruce Log x64', price: 5 },
+                { name: 'Dark Oak Log x64', price: 8 },
+                { name: 'Crimson Stem x64', price: 10 },
+                { name: 'Warped Stem x64', price: 10 }
+            ],
+            'Special Item': [
+                { name: 'Ender Pearl x16', price: 30 },
+                { name: 'Ender Chest', price: 50 },
+                { name: 'Shulker Box', price: 80 },
+                { name: 'Totem of Undying', price: 130 },
+                { name: 'Enchanted Book (Mending)', price: 160 },
+                { name: 'Beacon', price: 270 },
+                { name: 'Nether Star', price: 320 },
+                { name: 'Elytra', price: 420 }
+            ]
+        };
+        let SHOP_CATALOG = JSON.parse(JSON.stringify(DEFAULT_SHOP_CATALOG));
+
+        async function loadShopConfig() {
+            try {
+                const res = await window.storage.get('shop_config', true);
+                if (res && res.value) { SHOP_CATALOG = JSON.parse(res.value); return; }
+            } catch (e) { /* not set yet */ }
+            SHOP_CATALOG = JSON.parse(JSON.stringify(DEFAULT_SHOP_CATALOG));
+            try { await window.storage.set('shop_config', JSON.stringify(SHOP_CATALOG), true); } catch (e) {}
+        }
+
+        let currentShopCategory = 'Weapons';
+
+        function openShop() {
+            showScreen('shopBox');
+            renderShopTabs();
+            renderShopItems(currentShopCategory);
+        }
+
+        function renderShopTabs() {
+            const tabsEl = document.getElementById('shopTabs');
+            tabsEl.innerHTML = '';
+            Object.keys(SHOP_CATALOG).forEach(cat => {
+                const tab = document.createElement('div');
+                tab.className = 'shop-tab' + (cat === currentShopCategory ? ' active' : '');
+                tab.innerText = cat;
+                tab.onclick = () => { currentShopCategory = cat; renderShopTabs(); renderShopItems(cat); };
+                tabsEl.appendChild(tab);
+            });
+        }
+
+        function renderShopItems(category) {
+            const listEl = document.getElementById('shopItemList');
+            listEl.innerHTML = '';
+            SHOP_CATALOG[category].forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'shop-item';
+                const canAfford = wallet.coins >= item.price;
+                row.innerHTML = `
+                    <div>
+                        <div class="shop-item-name">${item.name}</div>
+                        <div class="shop-item-price">🪙 ${item.price} coins</div>
+                    </div>
+                    <button class="buy-btn" ${canAfford ? '' : 'disabled'}>ဝယ်မယ်</button>
+                `;
+                row.querySelector('.buy-btn').onclick = () => buyItem(category, item);
+                listEl.appendChild(row);
+            });
+        }
+
+        let pendingPurchase = null;
+
+        function buyItem(category, item) {
+            if (wallet.coins < item.price) {
+                alert('Coin မလုံလောက်ပါ။');
+                return;
+            }
+            pendingPurchase = { category, item };
+            document.getElementById('pcItemName').innerText = item.name + ' (' + category + ')';
+            document.getElementById('pcItemPrice').innerText = item.price + ' coins';
+            document.getElementById('pcTgUsername').value = wallet.username || '';
+            document.getElementById('pcIgn').value = wallet.ign || '';
+            showScreen('purchaseConfirmBox');
+        }
+
+        function cancelPurchase() {
+            pendingPurchase = null;
+            showScreen('shopBox');
+        }
+
+        async function confirmPurchase() {
+            if (!pendingPurchase) { showScreen('shopBox'); return; }
+            const tgUsername = document.getElementById('pcTgUsername').value.trim();
+            const ign = document.getElementById('pcIgn').value.trim();
+            if (!tgUsername || !ign) {
+                alert('Telegram Username နှင့် IGN နှစ်ခုလုံး ဖြည့်ပေးပါ။');
+                return;
+            }
+            const { category, item } = pendingPurchase;
+            if (wallet.coins < item.price) {
+                alert('Coin မလုံလောက်ပါ။');
+                showScreen('shopBox');
+                return;
+            }
+
+            wallet.coins -= item.price;
+            wallet.purchasesMade += 1;
+            wallet.ign = ign;
+            const redeemCode = 'RDM-' + Date.now().toString(36).toUpperCase();
+            await saveWallet();
+            refreshCoinDisplays();
+            recordSpend(item.price, 'purchase');
+
+            document.getElementById('resShopIgn').innerText = ign;
+            document.getElementById('resShopTg').innerText = tgUsername;
+            document.getElementById('resShopItem').innerText = item.name + ' (' + category + ')';
+            document.getElementById('resShopPrice').innerText = item.price + ' coins';
+            document.getElementById('resShopCode').innerText = redeemCode;
+
+            sendTelegramMessage(TG_SHOP_BOT,
+                '🛒 Item ဝယ်ယူမှု\nItem: ' + item.name + ' (' + category + ')\nPrice: ' + item.price + ' coins\n' +
+                'Account: ' + wallet.username + '\nTG Username: ' + tgUsername + '\nIGN: ' + ign + '\nRedeem Code: ' + redeemCode);
+
+            pendingPurchase = null;
+            generateInvoiceImage('cardShop', ign + '_' + item.name.replace(/\s+/g, '_') + '_receipt');
+        }
+
+        // Check session / show auth screen on page start
+        initApp();
+    </script>
+</body>
+</html>
